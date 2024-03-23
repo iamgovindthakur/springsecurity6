@@ -12,8 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Fetch upstream changes
-        run: git fetch upstream
+      - name: Set up upstream remote
+        run: |
+          git remote add upstream https://github.com/eazybytes/springsecurity6.git
+          git fetch upstream
 
       - name: List all branches from upstream
         run: git ls-remote --heads upstream
