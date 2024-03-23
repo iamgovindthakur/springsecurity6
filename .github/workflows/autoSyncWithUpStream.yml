@@ -17,8 +17,13 @@ jobs:
           git remote add upstream https://github.com/eazybytes/springsecurity6.git
           git fetch upstream
 
-      - name: Pull changes from upstream
-        run: git pull origin main
+      - name: Pull changes from all branches in upstream
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          for branch in $(git branch -r | grep -v 'HEAD' | sed 's/origin\///'); do
+            git checkout $branch
+            git pull origin $branch
+          done
 
       - name: List all branches from upstream
         run: git ls-remote --heads upstream
