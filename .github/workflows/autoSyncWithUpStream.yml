@@ -1,0 +1,28 @@
+name: Auto Sync with Upstream
+
+on:
+  push:
+    branches-ignore:
+      - main # Exclude the main branch to avoid infinite loops
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch upstream changes
+        run: git fetch upstream
+
+      - name: List all branches from upstream
+        run: git ls-remote --heads upstream
+
+      - name: Merge upstream changes for each branch
+        run: |
+          for branch in $(git ls-remote --heads upstream | cut -d'/' -f3); do
+            git checkout -B $branch upstream/$branch
+          done
+
+      - name: Push changes to fork
+        run: git push origin --all
